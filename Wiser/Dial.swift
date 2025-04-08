@@ -14,7 +14,10 @@ struct Dial: View {
             Image("dial2")
             Group {
                 Circle()
-                    .foregroundStyle(Gradient(colors: [.white, Color("gray2")]))
+                    .foregroundStyle(Gradient(stops: [
+                        .init(color: .white, location: 0.25),
+                        .init(color: Color("gray2"), location: 1.0)
+                    ]))
                 Circle()
                     .stroke(lineWidth: 6)
                     .foregroundStyle(Color("gray1"))
