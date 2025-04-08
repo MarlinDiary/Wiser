@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct Dial: View {
+    @Binding var currentLabel: String
+    
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
 #Preview {
-    Dial()
+    Dial(currentLabel: .constant("React"))
 }
