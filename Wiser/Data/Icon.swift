@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Icon {
+struct Icon: Codable {
     let id: UUID
     let type: String
     let image: String
@@ -23,8 +23,8 @@ struct IconLibrary {
     let icons: [Icon]
     
     static let example: [Icon] = [
-        Icon(type: "star", image: "star"),
-        Icon(type: "heart", image: "heart"),
-        Icon(type: "moon", image: "moon"),
+        Icon(type: "example", image: "dog"),
+        Icon(type: "example", image: "grass"),
+        Icon(type: "example", image: "boxing"),
     ]
 }

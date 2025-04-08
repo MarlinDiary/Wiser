@@ -10,17 +10,17 @@ import Foundation
 class Label: Codable {
     let id: UUID
     var name: String
-    var icon: String
+    var icon: Icon
     
-    init(name: String, icon: String) {
+    init(name: String, icon: Icon) {
         self.id = UUID()
         self.name = name
         self.icon = icon
     }
     
-    static let labelExamples = [
-        Label(name: "Home", icon: "house"),
-        Label(name: "Work", icon: "briefcase"),
-        Label(name: "Family", icon: "heart"),
+    static let exampleLabels: [Label] = [
+        Label(name: "dog", icon: Icon(type: "example", image: "dog")),
+        Label(name: "grass", icon: Icon(type: "example", image: "grass")),
+        Label(name: "boxing", icon: Icon(type: "example", image: "boxing"))
     ]
 }

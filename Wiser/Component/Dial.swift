@@ -9,12 +9,25 @@ import SwiftUI
 
 struct Dial: View {
     @Binding var currentLabel: String
+    @Binding var Labels: [Label]
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        TabView {
+            ForEach(Labels, id: \.id) { label in
+                Image(label.icon.image)
+                    .frame(width: 228, height: 228)
+                    .offset(x: 0, y: 25)
+            }
+        }
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+        .frame(width: 215, height: 215)
+        .clipShape(Circle())
+        .background {
+            DialBackground()
+        }
     }
 }
 
 #Preview {
-    Dial(currentLabel: .constant("React"))
+    Dial(currentLabel: .constant("React"), Labels: .constant(Label.exampleLabels))
 }
