@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Dial: View {
+struct DialBackground: View {
     var body: some View {
         ZStack {
             Image("dial1")
@@ -28,5 +28,5 @@ struct Dial: View {
 }
 
 #Preview {
-    Dial()
+    DialBackground()
 }
