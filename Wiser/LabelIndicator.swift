@@ -8,11 +8,46 @@
 import SwiftUI
 
 struct LabelIndicator: View {
+    @Binding var status: LabelIndicatorStatus
+    @Binding var currentLabel: String
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack{
+            Circle()
+                .strokeBorder(Color.black.opacity(0.25), lineWidth: 0.2)
+                .background(
+                    Circle()
+                        .fill(status == .home ? Color("gray1") : (status == .log ? Color("orange1"): Color("green1")))
+                        .overlay(
+                            Circle()
+                                .stroke(Color.black.opacity(0.25), lineWidth: 1)
+                                .blur(radius: 1)
+                        )
+                        .mask(Circle())
+                )
+                .shadow(color: status == .home ? Color("gray1").opacity(0) : (status == .log ? Color("orange1"): Color("green1")), radius: 2)
+                .frame(width: 12, height: 12)
+            
+            Text(currentLabel)
+                .bold()
+            
+            if status == .home {
+                Image(systemName: "chevron.down")
+                    .bold()
+                    .font(.system(size: 12))
+            }
+        }
     }
 }
 
 #Preview {
-    LabelIndicator()
+    LabelIndicator(status: .constant(.home), currentLabel: .constant("React"))
+}
+
+#Preview {
+    LabelIndicator(status: .constant(.log), currentLabel: .constant("React"))
+}
+
+#Preview {
+    LabelIndicator(status: .constant(.count), currentLabel: .constant("React"))
 }

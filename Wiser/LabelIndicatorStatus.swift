@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+public enum LabelIndicatorStatus {
+    case home
+    case log
+    case count
+}
