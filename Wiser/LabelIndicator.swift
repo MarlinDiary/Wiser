@@ -17,7 +17,7 @@ struct LabelIndicator: View {
                 .strokeBorder(Color.black.opacity(0.25), lineWidth: 0.2)
                 .background(
                     Circle()
-                        .fill(status == .home ? Color("gray1") : (status == .log ? Color("orange1"): Color("green1")))
+                        .fill(status == .home ? Color("gray3") : (status == .log ? Color("orange1"): Color("green1")))
                         .overlay(
                             Circle()
                                 .stroke(Color.black.opacity(0.25), lineWidth: 1)
@@ -25,7 +25,7 @@ struct LabelIndicator: View {
                         )
                         .mask(Circle())
                 )
-                .shadow(color: status == .home ? Color("gray1").opacity(0) : (status == .log ? Color("orange1"): Color("green1")), radius: 2)
+                .shadow(color: status == .home ? Color("gray3").opacity(0) : (status == .log ? Color("orange1"): Color("green1")), radius: 2)
                 .frame(width: 12, height: 12)
             
             Text(currentLabel)

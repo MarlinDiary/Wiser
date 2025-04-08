@@ -9,7 +9,18 @@ import SwiftUI
 
 struct Dial: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            Image("dial1")
+            Image("dial2")
+            Group {
+                Circle()
+                    .foregroundStyle(Gradient(colors: [.white, Color("gray2")]))
+                Circle()
+                    .stroke(lineWidth: 6)
+                    .foregroundStyle(Color("gray1"))
+            }
+            .frame(width: 228, height: 228)
+        }
     }
 }
 
