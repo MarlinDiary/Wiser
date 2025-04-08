@@ -8,11 +8,31 @@
 import SwiftUI
 
 struct HomeStatusControl: View {
+    @Binding var status: HomeStatus
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Group {
+            switch status {
+            case .home:
+                Image(systemName: "plus")
+            case .count:
+                Image(systemName: "xmark")
+            case .log:
+                Image(systemName: "power")
+            }
+        }
+        .bold()
     }
 }
 
 #Preview {
-    HomeStatusControl()
+    HomeStatusControl(status: .constant(.home))
+}
+
+#Preview {
+    HomeStatusControl(status: .constant(.count))
+}
+
+#Preview {
+    HomeStatusControl(status: .constant(.log))
 }

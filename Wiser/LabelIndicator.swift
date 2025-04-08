@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LabelIndicator: View {
-    @Binding var status: LabelIndicatorStatus
+    @Binding var status: HomeStatus
     @Binding var currentLabel: String
     
     var body: some View {

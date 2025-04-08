@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum LabelIndicatorStatus {
+public enum HomeStatus {
     case home
     case log
     case count
