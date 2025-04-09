@@ -74,7 +74,7 @@ struct ContentView: View {
                 Heatmap()
             } else {
                 CountInfo(logo:"clock", name:"Start time", number:"08:30", unit:"AM")
-                    .padding(.bottom, 24)
+                    .padding(.bottom, 42)
                 
                 CountInfo(logo:"ruler", name:"Total duration", number:"0", unit:"HOUR")
                 
@@ -85,7 +85,7 @@ struct ContentView: View {
             
             Spacer()
             
-            HomeButton(status: $status)
+            HomeButton(status: $status, currentLabel: $currentLabel)
         }
         .onAppear {
             if labels.count > 0 && currentLabel == nil {
