@@ -19,7 +19,7 @@ struct Icon: Codable {
     }
 }
 
-enum IconLibrary {
+extension Icon {
     static let dog = Icon(type: "example", image: "dog")
     static let grass = Icon(type: "example", image: "grass")
     static let boxing = Icon(type: "example", image: "boxing")

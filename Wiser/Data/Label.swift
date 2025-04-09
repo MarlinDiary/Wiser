@@ -19,8 +19,8 @@ class Label: Codable {
     }
     
     static let exampleLabels: [Label] = [
-        Label(name: "Dog", icon: Icon(type: "example", image: "dog")),
-        Label(name: "Grass", icon: Icon(type: "example", image: "grass")),
-        Label(name: "Boxing", icon: Icon(type: "example", image: "boxing"))
+        Label(name: "Dog", icon: .dog),
+        Label(name: "Grass", icon: .grass),
+        Label(name: "Boxing", icon: .boxing)
     ]
 }
