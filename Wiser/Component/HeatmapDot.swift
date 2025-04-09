@@ -20,7 +20,7 @@ struct HeatmapDot: View {
                 Circle()
                     .overlay(
                         Circle()
-                            .stroke(Color("orange1"), lineWidth: isAnimating ? 1.2 : 0.6)
+                            .stroke(Color("orange1"), lineWidth: isAnimating ? 1 : 0.6)
                             .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true), value: isAnimating)
                     )
                     .onAppear {
