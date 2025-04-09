@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct DialScale: View {
+    var status: HomeStatus = .home
+    @State private var rotation: Double = 0
+    
     var body: some View {
         ZStack {
             ForEach(0..<60) { index in
@@ -18,9 +21,28 @@ struct DialScale: View {
                     .rotationEffect(.degrees(Double(index) * 6))
             }
         }
+        .onChange(of: status) { oldValue, newValue in
+            print("newValue: \(newValue)")
+        }
+        .rotationEffect(.degrees(rotation))
+        .onChange(of: status) { oldValue, newValue in
+            if newValue == .count {
+                withAnimation(.linear(duration: 60).repeatForever(autoreverses: false)) {
+                    rotation = 360
+                }
+            } else {
+                withAnimation(.default) {
+                    rotation = 0
+                }
+            }
+        }
     }
 }
 
 #Preview {
     DialScale()
+}
+
+#Preview {
+    DialScale(status: .count)
 }

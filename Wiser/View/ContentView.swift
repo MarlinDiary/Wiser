@@ -182,9 +182,6 @@ struct ContentView: View {
                 currentLabel = newValue.first
             }
         }
-        .onChange(of: tempRecords) { oldValue, newValue in
-            print("newValue: \(newValue)")
-        }
         .onReceive(timer) { _ in
             // 更新当前时间
             self.currentTime = Date()

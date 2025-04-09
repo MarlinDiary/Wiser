@@ -89,7 +89,7 @@ struct Dial: View {
         .frame(width: 221, height: 221)
         .clipShape(Circle())
         .overlay {
-            DialScale()
+            DialScale(status: status)
         }
         .background {
             DialBackground()
