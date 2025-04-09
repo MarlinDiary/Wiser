@@ -15,9 +15,25 @@ struct Dial: View {
     var body: some View {
         TabView {
             ForEach(Labels, id: \.id) { label in
-                Image(label.icon.image)
-                    .frame(width: 228, height: 228)
-                    .offset(x: 0, y: 25)
+                VStack {
+                    if status != .home {
+                        HStack(alignment: .lastTextBaseline) {
+                            Text("12 : 24")
+                                .font(.system(size: 36))
+                                .fontWeight(.heavy)
+                            Text("MIN")
+                                .font(.system(size: 9))
+                                .fontWeight(.bold)
+                        }
+                        .offset(x: 0, y: 46)
+                    }
+                    
+                    Image(label.icon.image)
+                        .resizable()
+                        .saturation(status == .home ? 0.25 : 1)
+                        .frame(width: status == .home ? 228 : 170, height: status == .home ? 228 : 170)
+                        .offset(x: 0, y: 25)
+                }
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
