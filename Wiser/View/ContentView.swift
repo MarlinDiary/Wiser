@@ -12,6 +12,7 @@ struct ContentView: View {
     
     @State var status: HomeStatus = .home
     @State var currentLabel: Label?
+    @State var checkInTime: Date?
     
     @Query private var labels: [Label]
     @Query private var allTimeLogs: [TimeLog]
@@ -40,6 +41,24 @@ struct ContentView: View {
         let minutes = (Int(totalSeconds) % 3600) / 60
         
         return (String(format: "%02d", hours), String(format: "%02d", minutes))
+    }
+    
+    var formattedCheckInTime: (number: String, unit: String) {
+        guard let checkInTime = checkInTime else {
+            return ("--:--", "")
+        }
+        
+        let formatter = DateFormatter()
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: checkInTime)
+        
+        if hour < 12 {
+            formatter.dateFormat = "hh:mm"
+            return (formatter.string(from: checkInTime), "AM")
+        } else {
+            formatter.dateFormat = "hh:mm"
+            return (formatter.string(from: checkInTime), "PM")
+        }
     }
     
     var body: some View {
@@ -73,7 +92,7 @@ struct ContentView: View {
                 
                 Heatmap()
             } else {
-                CountInfo(logo:"clock", name:"Start time", number:"08:30", unit:"AM")
+                CountInfo(logo:"clock", name:"Start time", number: formattedCheckInTime.number, unit: formattedCheckInTime.unit)
                     .padding(.bottom, 42)
                 
                 CountInfo(logo:"ruler", name:"Total duration", number:"0", unit:"HOUR")
@@ -85,7 +104,7 @@ struct ContentView: View {
             
             Spacer()
             
-            HomeButton(status: $status, currentLabel: $currentLabel)
+            HomeButton(status: $status, currentLabel: $currentLabel, checkInTime: $checkInTime)
         }
         .onAppear {
             if labels.count > 0 && currentLabel == nil {
@@ -148,6 +167,8 @@ struct ContentView: View {
     
     container.mainContext.insert(todayLog)
     
-    return ContentView(status: .count)
+    let view = ContentView(status: .count)
+    view.checkInTime = Calendar.current.date(bySettingHour: 8, minute: 30, second: 0, of: Date())
+    return view
         .modelContainer(container)
 }

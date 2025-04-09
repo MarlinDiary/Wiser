@@ -12,6 +12,7 @@ struct HomeButton: View {
     @Binding var status: HomeStatus
     @Environment(\.modelContext) private var modelContext
     @Binding var currentLabel: Label?
+    @Binding var checkInTime: Date?
     
     var body: some View {
         Button {
@@ -19,12 +20,15 @@ struct HomeButton: View {
             case .home:
                 // Check in: Create new TimeLog and change status to count
                 if let label = currentLabel {
-                    let newTimeLog = TimeLog(startTime: Date(), label: label)
+                    let now = Date()
+                    let newTimeLog = TimeLog(startTime: now, label: label)
                     modelContext.insert(newTimeLog)
+                    checkInTime = now
                     status = .count
                 }
             case .count:
                 // Handle check out (will be implemented later)
+                checkInTime = nil
                 status = .home
             case .log:
                 // Handle add log (will be implemented later)
@@ -45,13 +49,13 @@ struct HomeButton: View {
 }
 
 #Preview {
-    HomeButton(status: .constant(.home), currentLabel: .constant(nil))
+    HomeButton(status: .constant(.home), currentLabel: .constant(nil), checkInTime: .constant(nil))
 }
 
 #Preview {
-    HomeButton(status: .constant(.count), currentLabel: .constant(nil))
+    HomeButton(status: .constant(.count), currentLabel: .constant(nil), checkInTime: .constant(Date()))
 }
 
 #Preview {
-    HomeButton(status: .constant(.log), currentLabel: .constant(nil))
+    HomeButton(status: .constant(.log), currentLabel: .constant(nil), checkInTime: .constant(nil))
 }
