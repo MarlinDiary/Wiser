@@ -19,12 +19,8 @@ struct Icon: Codable {
     }
 }
 
-struct IconLibrary {
-    let icons: [Icon]
-    
-    static let example: [Icon] = [
-        Icon(type: "example", image: "dog"),
-        Icon(type: "example", image: "grass"),
-        Icon(type: "example", image: "boxing"),
-    ]
+enum IconLibrary {
+    static let dog = Icon(type: "example", image: "dog")
+    static let grass = Icon(type: "example", image: "grass")
+    static let boxing = Icon(type: "example", image: "boxing")
 }
