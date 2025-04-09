@@ -15,9 +15,11 @@ struct HeatmapDot: View {
             switch status {
             case .blank:
                 Circle()
+                    .foregroundStyle(Color("gray3"))
                 
             case .now:
                 Circle()
+                    .foregroundStyle(Color("gray3"))
                     .overlay(
                         Circle()
                             .stroke(Color("orange1"), lineWidth: isAnimating ? 1 : 0.6)
@@ -32,11 +34,21 @@ struct HeatmapDot: View {
                     .foregroundStyle(.black)
             case .select:
                 Circle()
-                    .foregroundStyle(.orange1)
+                    .foregroundStyle(Color("orange1"))
+            case .nowWithRecord:
+                Circle()
+                    .foregroundStyle(.black)
+                    .overlay(
+                        Circle()
+                            .stroke(Color("orange1"), lineWidth: isAnimating ? 1 : 0.6)
+                            .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true), value: isAnimating)
+                    )
+                    .onAppear {
+                        isAnimating = true
+                    }
             }
         }
         .frame(width: 9, height: 9)
-        .foregroundStyle(Color("gray3"))
     }
 }
 
@@ -45,6 +57,7 @@ enum HeatmapDotStatus {
     case record
     case select
     case now
+    case nowWithRecord
 }
 
 #Preview {
@@ -61,4 +74,8 @@ enum HeatmapDotStatus {
 
 #Preview {
     HeatmapDot(status: .select)
+}
+
+#Preview {
+    HeatmapDot(status: .nowWithRecord)
 }

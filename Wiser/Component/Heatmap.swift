@@ -69,6 +69,8 @@ struct Heatmap: View {
             for row in 0..<heatmapData[column].count {
                 if heatmapData[column][row] == .now {
                     heatmapData[column][row] = .blank
+                } else if heatmapData[column][row] == .nowWithRecord {
+                    heatmapData[column][row] = .record
                 }
             }
         }
@@ -82,9 +84,13 @@ struct Heatmap: View {
         // Calculate corresponding row (minute/5)
         let row = minute / 5
         
-        // Update current time dot status to .now
+        // Update current time dot status to .now or .nowWithRecord
         if hour < heatmapData.count && row < heatmapData[0].count {
-            heatmapData[hour][row] = .now
+            if heatmapData[hour][row] == .record {
+                heatmapData[hour][row] = .nowWithRecord
+            } else {
+                heatmapData[hour][row] = .now
+            }
         }
     }
 }
