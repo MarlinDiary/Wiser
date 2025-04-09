@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct LabelIndicator: View {
     @Binding var status: HomeStatus
@@ -41,13 +42,34 @@ struct LabelIndicator: View {
 }
 
 #Preview {
-    LabelIndicator(status: .constant(.home), currentLabel: .constant(Label.exampleLabels.first!))
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Label.self, configurations: config)
+    
+    let sampleLabel = Label(name: "Dog", icon: .dog)
+    container.mainContext.insert(sampleLabel)
+    
+    return LabelIndicator(status: .constant(.home), currentLabel: .constant(sampleLabel))
+        .modelContainer(container)
 }
 
 #Preview {
-    LabelIndicator(status: .constant(.log), currentLabel: .constant(Label.exampleLabels.first!))
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Label.self, configurations: config)
+    
+    let sampleLabel = Label(name: "Dog", icon: .dog)
+    container.mainContext.insert(sampleLabel)
+    
+    return LabelIndicator(status: .constant(.log), currentLabel: .constant(sampleLabel))
+        .modelContainer(container)
 }
 
 #Preview {
-    LabelIndicator(status: .constant(.count), currentLabel: .constant(Label.exampleLabels.first!))
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Label.self, configurations: config)
+    
+    let sampleLabel = Label(name: "Dog", icon: .dog)
+    container.mainContext.insert(sampleLabel)
+    
+    return LabelIndicator(status: .constant(.count), currentLabel: .constant(sampleLabel))
+        .modelContainer(container)
 }

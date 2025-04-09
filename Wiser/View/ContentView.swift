@@ -11,12 +11,16 @@ import SwiftData
 struct ContentView: View {
     
     @State var status: HomeStatus = .home
-    @State var currentLabel: Label = Label.exampleLabels.first!
-
+    @State var currentLabel: Label?
+    
+    @Query private var labels: [Label]
+    
     var body: some View {
         VStack {
             HStack {
-                LabelIndicator(status: $status, currentLabel: $currentLabel)
+                if let currentLabel = currentLabel {
+                    LabelIndicator(status: $status, currentLabel: .constant(currentLabel))
+                }
                 Spacer()
                 HomeStatusControl(status: $status)
             }
@@ -25,7 +29,9 @@ struct ContentView: View {
             Spacer()
             Spacer()
             
-            Dial(currentLabel: $currentLabel, Labels: .constant(Label.exampleLabels), status: $status)
+            if let currentLabel = currentLabel {
+                Dial(currentLabel: .constant(currentLabel), Labels: .constant(labels), status: $status)
+            }
             
             Spacer()
             Spacer()
@@ -40,9 +46,33 @@ struct ContentView: View {
             
             HomeButton(status: $status)
         }
+        .onAppear {
+            if labels.count > 0 && currentLabel == nil {
+                currentLabel = labels.first
+            }
+        }
+        .onChange(of: labels) { oldValue, newValue in
+            if newValue.count > 0 && currentLabel == nil {
+                currentLabel = newValue.first
+            }
+        }
     }
 }
 
 #Preview {
-    ContentView()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Label.self, configurations: config)
+    
+    let sampleLabels = [
+        Label(name: "Dog", icon: .dog),
+        Label(name: "Grass", icon: .grass),
+        Label(name: "Boxing", icon: .boxing)
+    ]
+    
+    for label in sampleLabels {
+        container.mainContext.insert(label)
+    }
+    
+    return ContentView()
+        .modelContainer(container)
 }

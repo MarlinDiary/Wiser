@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import SwiftData
 
-class Label: Codable {
-    let id: UUID
+@Model
+class Label {
+    var id: UUID
     var name: String
     var icon: Icon
     

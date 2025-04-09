@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct Dial: View {
     @Binding var currentLabel: Label
@@ -49,13 +50,61 @@ struct Dial: View {
 }
 
 #Preview {
-    Dial(currentLabel: .constant(Label.exampleLabels.first!), Labels: .constant(Label.exampleLabels), status: .constant(.home))
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Label.self, configurations: config)
+    
+    let sampleLabels = [
+        Label(name: "Dog", icon: .dog),
+        Label(name: "Grass", icon: .grass),
+        Label(name: "Boxing", icon: .boxing)
+    ]
+    
+    for label in sampleLabels {
+        container.mainContext.insert(label)
+    }
+    
+    return Dial(currentLabel: .constant(sampleLabels[0]), 
+                Labels: .constant(sampleLabels), 
+                status: .constant(.home))
+        .modelContainer(container)
 }
 
 #Preview {
-    Dial(currentLabel: .constant(Label.exampleLabels.first!), Labels: .constant(Label.exampleLabels), status: .constant(.log))
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Label.self, configurations: config)
+    
+    let sampleLabels = [
+        Label(name: "Dog", icon: .dog),
+        Label(name: "Grass", icon: .grass),
+        Label(name: "Boxing", icon: .boxing)
+    ]
+    
+    for label in sampleLabels {
+        container.mainContext.insert(label)
+    }
+    
+    return Dial(currentLabel: .constant(sampleLabels[0]), 
+                Labels: .constant(sampleLabels), 
+                status: .constant(.log))
+        .modelContainer(container)
 }
 
 #Preview {
-    Dial(currentLabel: .constant(Label.exampleLabels.first!), Labels: .constant(Label.exampleLabels), status: .constant(.count))
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Label.self, configurations: config)
+    
+    let sampleLabels = [
+        Label(name: "Dog", icon: .dog),
+        Label(name: "Grass", icon: .grass),
+        Label(name: "Boxing", icon: .boxing)
+    ]
+    
+    for label in sampleLabels {
+        container.mainContext.insert(label)
+    }
+    
+    return Dial(currentLabel: .constant(sampleLabels[0]), 
+                Labels: .constant(sampleLabels), 
+                status: .constant(.count))
+        .modelContainer(container)
 }

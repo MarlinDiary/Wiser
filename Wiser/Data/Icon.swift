@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Icon: Codable {
-    let id: UUID
-    let type: String
-    let image: String
+@Model
+class Icon {
+    var id: UUID
+    var type: String
+    var image: String
     
     init(type: String, image: String) {
         self.id = UUID()
