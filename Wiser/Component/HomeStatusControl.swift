@@ -16,9 +16,9 @@ struct HomeStatusControl: View {
             case .home:
                 Image(systemName: "plus")
             case .count:
-                Image(systemName: "xmark")
-            case .log:
                 Image(systemName: "power")
+            case .log:
+                Image(systemName: "xmark")
             }
         }
         .bold()

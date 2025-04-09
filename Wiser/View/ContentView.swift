@@ -66,11 +66,22 @@ struct ContentView: View {
             Spacer()
             Spacer()
             
-            HeroTitle(hour: totalTimeToday.hour, minute: totalTimeToday.minute)
-            
-            Spacer()
-            
-            Heatmap()
+            if status != .count {
+                HeroTitle(hour: totalTimeToday.hour, minute: totalTimeToday.minute)
+                
+                Spacer()
+                
+                Heatmap()
+            } else {
+                CountInfo(logo:"clock", name:"Start time", number:"08:30", unit:"AM")
+                    .padding(.bottom, 24)
+                
+                CountInfo(logo:"ruler", name:"Total duration", number:"0", unit:"HOUR")
+                
+                 Spacer()
+                
+                Tip(title: "Focus Tip", content: "If you study until 12:30, you will exceed the duration of your study from yesterday morning.")
+            }
             
             Spacer()
             
@@ -112,5 +123,31 @@ struct ContentView: View {
     container.mainContext.insert(todayLog)
     
     return ContentView()
+        .modelContainer(container)
+}
+
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Label.self, Icon.self, TimeLog.self, configurations: config)
+    
+    let sampleLabels = [
+        Label(name: "Dog", icon: .dog),
+        Label(name: "Grass", icon: .grass),
+        Label(name: "Boxing", icon: .boxing)
+    ]
+    
+    for label in sampleLabels {
+        container.mainContext.insert(label)
+    }
+    
+    let todayLog = TimeLog(
+        startTime: Date(),
+        endTime: Date().addingTimeInterval(3600),
+        label: sampleLabels[0]
+    )
+    
+    container.mainContext.insert(todayLog)
+    
+    return ContentView(status: .count)
         .modelContainer(container)
 }

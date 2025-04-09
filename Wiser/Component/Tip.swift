@@ -8,11 +8,25 @@
 import SwiftUI
 
 struct Tip: View {
+    var title: String
+    var content: String
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Divider()
+                .padding(.bottom, 36)
+            Text(title)
+                .bold()
+                .font(.system(size: 15))
+                .padding(.bottom, 18)
+            Text(content)
+                .font(.system(size: 13))
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.gray4)
+        }
+        .padding(.horizontal)
     }
 }
 
 #Preview {
-    Tip()
+    Tip(title: "Focus Tip", content: "If you study until 12:30, you will exceed the duration of your study from yesterday morning.")
 }
