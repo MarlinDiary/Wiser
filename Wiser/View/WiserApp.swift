@@ -13,7 +13,8 @@ struct WiserApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Label.self,
-            Icon.self
+            Icon.self,
+            TimeLog.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

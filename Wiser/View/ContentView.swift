@@ -14,6 +14,17 @@ struct ContentView: View {
     @State var currentLabel: Label?
     
     @Query private var labels: [Label]
+    @Query private var allTimeLogs: [TimeLog]
+    
+    var todayTimeLogs: [TimeLog] {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: Date())
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        return allTimeLogs.filter { timeLog in
+            timeLog.startTime >= startOfDay && timeLog.startTime < endOfDay
+        }.sorted { $0.startTime < $1.startTime }
+    }
     
     var body: some View {
         VStack {
@@ -61,7 +72,7 @@ struct ContentView: View {
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Label.self, configurations: config)
+    let container = try! ModelContainer(for: Label.self, Icon.self, TimeLog.self, configurations: config)
     
     let sampleLabels = [
         Label(name: "Dog", icon: .dog),
@@ -72,6 +83,14 @@ struct ContentView: View {
     for label in sampleLabels {
         container.mainContext.insert(label)
     }
+    
+    let todayLog = TimeLog(
+        startTime: Date(),
+        endTime: Date().addingTimeInterval(3600),
+        label: sampleLabels[0]
+    )
+    
+    container.mainContext.insert(todayLog)
     
     return ContentView()
         .modelContainer(container)
