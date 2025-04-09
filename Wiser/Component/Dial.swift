@@ -10,12 +10,19 @@ import SwiftData
 
 struct Dial: View {
     @Binding var currentLabel: Label
-    @Binding var Labels: [Label]
     @Binding var status: HomeStatus
+    var labels: [Label]
     
     var body: some View {
-        TabView {
-            ForEach(Labels, id: \.id) { label in
+        TabView(selection: Binding(
+            get: { currentLabel.id },
+            set: { newValue in
+                if let index = labels.firstIndex(where: { $0.id == newValue }) {
+                    currentLabel = labels[index]
+                }
+            }
+        )) {
+            ForEach(labels, id: \.id) { label in
                 VStack {
                     if status != .home {
                         HStack(alignment: .lastTextBaseline) {
@@ -35,6 +42,7 @@ struct Dial: View {
                         .frame(width: status == .home ? 228 : 170, height: status == .home ? 228 : 170)
                         .offset(x: 0, y: 25)
                 }
+                .tag(label.id)
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
@@ -63,9 +71,9 @@ struct Dial: View {
         container.mainContext.insert(label)
     }
     
-    return Dial(currentLabel: .constant(sampleLabels[0]), 
-                Labels: .constant(sampleLabels), 
-                status: .constant(.home))
+    return Dial(currentLabel: .constant(sampleLabels[0]),
+                status: .constant(.home),
+                labels: sampleLabels )
         .modelContainer(container)
 }
 
@@ -83,9 +91,9 @@ struct Dial: View {
         container.mainContext.insert(label)
     }
     
-    return Dial(currentLabel: .constant(sampleLabels[0]), 
-                Labels: .constant(sampleLabels), 
-                status: .constant(.log))
+    return Dial(currentLabel: .constant(sampleLabels[0]),
+                status: .constant(.log),
+                labels: sampleLabels )
         .modelContainer(container)
 }
 
@@ -103,8 +111,8 @@ struct Dial: View {
         container.mainContext.insert(label)
     }
     
-    return Dial(currentLabel: .constant(sampleLabels[0]), 
-                Labels: .constant(sampleLabels), 
-                status: .constant(.count))
+    return Dial(currentLabel: .constant(sampleLabels[0]),
+                status: .constant(.count),
+                labels: sampleLabels )
         .modelContainer(container)
 }

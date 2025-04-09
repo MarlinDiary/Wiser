@@ -10,7 +10,7 @@ import SwiftData
 
 struct LabelIndicator: View {
     @Binding var status: HomeStatus
-    @Binding var currentLabel: Label
+    var currentLabel: Label
     
     var body: some View {
         HStack{
@@ -48,7 +48,7 @@ struct LabelIndicator: View {
     let sampleLabel = Label(name: "Dog", icon: .dog)
     container.mainContext.insert(sampleLabel)
     
-    return LabelIndicator(status: .constant(.home), currentLabel: .constant(sampleLabel))
+    return LabelIndicator(status: .constant(.home), currentLabel: sampleLabel)
         .modelContainer(container)
 }
 
@@ -59,7 +59,7 @@ struct LabelIndicator: View {
     let sampleLabel = Label(name: "Dog", icon: .dog)
     container.mainContext.insert(sampleLabel)
     
-    return LabelIndicator(status: .constant(.log), currentLabel: .constant(sampleLabel))
+    return LabelIndicator(status: .constant(.log), currentLabel: sampleLabel)
         .modelContainer(container)
 }
 
@@ -70,6 +70,6 @@ struct LabelIndicator: View {
     let sampleLabel = Label(name: "Dog", icon: .dog)
     container.mainContext.insert(sampleLabel)
     
-    return LabelIndicator(status: .constant(.count), currentLabel: .constant(sampleLabel))
+    return LabelIndicator(status: .constant(.count), currentLabel: sampleLabel)
         .modelContainer(container)
 }

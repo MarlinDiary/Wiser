@@ -46,7 +46,7 @@ struct ContentView: View {
         VStack {
             HStack {
                 if let currentLabel = currentLabel {
-                    LabelIndicator(status: $status, currentLabel: .constant(currentLabel))
+                    LabelIndicator(status: $status, currentLabel: currentLabel)
                 }
                 Spacer()
                 HomeStatusControl(status: $status)
@@ -57,7 +57,10 @@ struct ContentView: View {
             Spacer()
             
             if let currentLabel = currentLabel {
-                Dial(currentLabel: .constant(currentLabel), Labels: .constant(labels), status: $status)
+                Dial(currentLabel: Binding(
+                    get: { currentLabel },
+                    set: { self.currentLabel = $0 }
+                ), status: $status, labels: labels)
             }
             
             Spacer()
