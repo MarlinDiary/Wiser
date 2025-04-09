@@ -21,9 +21,9 @@ struct Dial: View {
                             Text("12 : 24")
                                 .font(.system(size: 36))
                                 .fontWeight(.heavy)
-                            Text("MIN")
-                                .font(.system(size: 9))
-                                .fontWeight(.bold)
+//                            Text("MIN")
+//                                .font(.system(size: 9))
+//                                .fontWeight(.bold)
                         }
                         .offset(x: 0, y: 46)
                     }
@@ -37,8 +37,11 @@ struct Dial: View {
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        .frame(width: 215, height: 215)
+        .frame(width: 221, height: 221)
         .clipShape(Circle())
+        .overlay {
+            DialScale()
+        }
         .background {
             DialBackground()
         }

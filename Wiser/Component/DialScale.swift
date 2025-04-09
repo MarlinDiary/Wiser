@@ -9,7 +9,15 @@ import SwiftUI
 
 struct DialScale: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            ForEach(0..<60) { index in
+                Rectangle()
+                    .fill(Color("gray2"))
+                    .frame(width: 1, height: 5)
+                    .offset(y: -106) // radius is 100
+                    .rotationEffect(.degrees(Double(index) * 6))
+            }
+        }
     }
 }
 
