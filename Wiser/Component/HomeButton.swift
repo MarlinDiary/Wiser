@@ -8,11 +8,33 @@
 import SwiftUI
 
 struct HomeButton: View {
+    @Binding var status: HomeStatus
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Button {
+            
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 33)
+                    .frame(width: 337, height: 67)
+                    .foregroundStyle(status == .log ? .orange1 : .black)
+                Text(status == .home ? "CHECK IN" : status == .count ? "CHECK OUT" : "ADD LOG")
+                    .foregroundStyle(.white)
+                    .fontWeight(.heavy)
+            }
+        }
+
     }
 }
 
 #Preview {
-    HomeButton()
+    HomeButton(status: .constant(.home))
+}
+
+#Preview {
+    HomeButton(status: .constant(.count))
+}
+
+#Preview {
+    HomeButton(status: .constant(.log))
 }
