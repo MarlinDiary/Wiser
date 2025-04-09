@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Dial: View {
-    @Binding var currentLabel: String
+    @Binding var currentLabel: Label
     @Binding var Labels: [Label]
     @Binding var status: HomeStatus
     
@@ -49,13 +49,13 @@ struct Dial: View {
 }
 
 #Preview {
-    Dial(currentLabel: .constant("React"), Labels: .constant(Label.exampleLabels), status: .constant(.home))
+    Dial(currentLabel: .constant(Label.exampleLabels.first!), Labels: .constant(Label.exampleLabels), status: .constant(.home))
 }
 
 #Preview {
-    Dial(currentLabel: .constant("React"), Labels: .constant(Label.exampleLabels), status: .constant(.log))
+    Dial(currentLabel: .constant(Label.exampleLabels.first!), Labels: .constant(Label.exampleLabels), status: .constant(.log))
 }
 
 #Preview {
-    Dial(currentLabel: .constant("React"), Labels: .constant(Label.exampleLabels), status: .constant(.count))
+    Dial(currentLabel: .constant(Label.exampleLabels.first!), Labels: .constant(Label.exampleLabels), status: .constant(.count))
 }

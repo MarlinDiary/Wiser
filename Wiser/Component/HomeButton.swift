@@ -16,7 +16,8 @@ struct HomeButton: View {
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 33)
-                    .frame(width: 337, height: 67)
+                    .padding(.horizontal)
+                    .frame(height: 67)
                     .foregroundStyle(status == .log ? .orange1 : .black)
                 Text(status == .home ? "CHECK IN" : status == .count ? "CHECK OUT" : "ADD LOG")
                     .foregroundStyle(.white)

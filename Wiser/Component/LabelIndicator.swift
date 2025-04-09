@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LabelIndicator: View {
     @Binding var status: HomeStatus
-    @Binding var currentLabel: String
+    @Binding var currentLabel: Label
     
     var body: some View {
         HStack{
@@ -28,7 +28,7 @@ struct LabelIndicator: View {
                 .shadow(color: status == .home ? Color("gray3").opacity(0) : (status == .log ? Color("orange1"): Color("green1")), radius: 2)
                 .frame(width: 12, height: 12)
             
-            Text(currentLabel)
+            Text(currentLabel.name)
                 .bold()
             
             if status == .home {
@@ -41,13 +41,13 @@ struct LabelIndicator: View {
 }
 
 #Preview {
-    LabelIndicator(status: .constant(.home), currentLabel: .constant("React"))
+    LabelIndicator(status: .constant(.home), currentLabel: .constant(Label.exampleLabels.first!))
 }
 
 #Preview {
-    LabelIndicator(status: .constant(.log), currentLabel: .constant("React"))
+    LabelIndicator(status: .constant(.log), currentLabel: .constant(Label.exampleLabels.first!))
 }
 
 #Preview {
-    LabelIndicator(status: .constant(.count), currentLabel: .constant("React"))
+    LabelIndicator(status: .constant(.count), currentLabel: .constant(Label.exampleLabels.first!))
 }

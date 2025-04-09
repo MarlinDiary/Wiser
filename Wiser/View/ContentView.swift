@@ -9,15 +9,40 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    
+    @State var status: HomeStatus = .home
+    @State var currentLabel: Label = Label.exampleLabels.first!
 
     var body: some View {
-        Text("Hello, World!")
+        VStack {
+            HStack {
+                LabelIndicator(status: $status, currentLabel: $currentLabel)
+                Spacer()
+                HomeStatusControl(status: $status)
+            }
+            .padding(.horizontal)
+            
+            Spacer()
+            Spacer()
+            
+            Dial(currentLabel: $currentLabel, Labels: .constant(Label.exampleLabels), status: $status)
+            
+            Spacer()
+            Spacer()
+            
+            HeroTitle(hour: "24", minute: "00")
+            
+            Spacer()
+            
+            Heatmap()
+            
+            Spacer()
+            
+            HomeButton(status: $status)
+        }
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
