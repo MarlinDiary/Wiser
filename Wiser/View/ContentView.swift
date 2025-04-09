@@ -7,15 +7,40 @@
 
 import SwiftUI
 import SwiftData
+import Foundation
 
 struct ContentView: View {
     
     @State var status: HomeStatus = .home
     @State var currentLabel: Label?
     @State var checkInTime: Date?
+    @State private var tempRecords: [TempTimeRecord] = []
     
     @Query private var labels: [Label]
     @Query private var allTimeLogs: [TimeLog]
+    @Environment(\.modelContext) private var modelContext
+    
+    // 添加或更新临时记录的方法
+    private func addOrUpdateTempRecord(for label: Label) {
+        let now = Date()
+        
+        // 如果已经有活跃的记录，为其设置结束时间
+        if let lastIndex = tempRecords.lastIndex(where: { $0.endTime == nil }) {
+            var lastRecord = tempRecords[lastIndex]
+            lastRecord.endTime = now
+            tempRecords[lastIndex] = lastRecord
+            
+            // 检查这条记录的持续时间是否小于30秒
+            if let endTime = lastRecord.endTime, endTime.timeIntervalSince(lastRecord.startTime) < 30 {
+                tempRecords.remove(at: lastIndex)
+            }
+        }
+        
+        // 为新的标签创建一条记录
+        if status == .count {
+            tempRecords.append(TempTimeRecord(startTime: now, label: label))
+        }
+    }
     
     var todayTimeLogs: [TimeLog] {
         let calendar = Calendar.current
@@ -94,7 +119,19 @@ struct ContentView: View {
             if let currentLabel = currentLabel {
                 Dial(currentLabel: Binding(
                     get: { currentLabel },
-                    set: { self.currentLabel = $0 }
+                    set: { 
+                        // 当标签变化时，更新记录
+                        if self.currentLabel != $0 {
+                            if let oldLabel = self.currentLabel {
+                                addOrUpdateTempRecord(for: oldLabel)
+                            }
+                            self.currentLabel = $0
+                            // 如果在计时状态下，为新标签创建记录
+                            if status == .count {
+                                addOrUpdateTempRecord(for: $0)
+                            }
+                        }
+                    }
                 ), status: $status, labels: labels)
             }
             
@@ -120,7 +157,7 @@ struct ContentView: View {
             
             Spacer()
             
-            HomeButton(status: $status, currentLabel: $currentLabel, checkInTime: $checkInTime)
+            HomeButton(status: $status, currentLabel: $currentLabel, checkInTime: $checkInTime, tempRecords: $tempRecords)
         }
         .onAppear {
             if labels.count > 0 && currentLabel == nil {
@@ -131,6 +168,9 @@ struct ContentView: View {
             if newValue.count > 0 && currentLabel == nil {
                 currentLabel = newValue.first
             }
+        }
+        .onChange(of: tempRecords) { oldValue, newValue in
+            print("newValue: \(newValue)")
         }
     }
 }

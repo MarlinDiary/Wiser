@@ -7,31 +7,48 @@
 
 import SwiftUI
 import SwiftData
+import Foundation
 
 struct HomeButton: View {
     @Binding var status: HomeStatus
     @Environment(\.modelContext) private var modelContext
     @Binding var currentLabel: Label?
     @Binding var checkInTime: Date?
+    @Binding var tempRecords: [TempTimeRecord]
     
     var body: some View {
         Button {
             switch status {
             case .home:
-                // Check in: Create new TimeLog and change status to count
+                // Check in: 创建初始临时记录并更改状态为count
                 if let label = currentLabel {
                     let now = Date()
-                    let newTimeLog = TimeLog(startTime: now, label: label)
-                    modelContext.insert(newTimeLog)
+                    tempRecords.append(TempTimeRecord(startTime: now, label: label))
                     checkInTime = now
                     status = .count
                 }
             case .count:
-                // Handle check out (will be implemented later)
+                // Check out: 保存所有临时记录并转换回home状态
+                if let lastIndex = tempRecords.lastIndex(where: { $0.endTime == nil }) {
+                    var lastRecord = tempRecords[lastIndex]
+                    lastRecord.endTime = Date()
+                    tempRecords[lastIndex] = lastRecord
+                }
+                
+                // 将所有有效的临时记录保存为TimeLog
+                for record in tempRecords {
+                    if let endTime = record.endTime {
+                        let timeLog = TimeLog(startTime: record.startTime, endTime: endTime, label: record.label)
+                        modelContext.insert(timeLog)
+                    }
+                }
+                
+                // 清空临时记录
+                tempRecords.removeAll()
                 checkInTime = nil
                 status = .home
             case .log:
-                // Handle add log (will be implemented later)
+                // 处理添加日志（暂未实现）
                 status = .home
             }
         } label: {
@@ -49,13 +66,13 @@ struct HomeButton: View {
 }
 
 #Preview {
-    HomeButton(status: .constant(.home), currentLabel: .constant(nil), checkInTime: .constant(nil))
+    HomeButton(status: .constant(.home), currentLabel: .constant(nil), checkInTime: .constant(nil), tempRecords: .constant([]))
 }
 
 #Preview {
-    HomeButton(status: .constant(.count), currentLabel: .constant(nil), checkInTime: .constant(Date()))
+    HomeButton(status: .constant(.count), currentLabel: .constant(nil), checkInTime: .constant(Date()), tempRecords: .constant([]))
 }
 
 #Preview {
-    HomeButton(status: .constant(.log), currentLabel: .constant(nil), checkInTime: .constant(nil))
+    HomeButton(status: .constant(.log), currentLabel: .constant(nil), checkInTime: .constant(nil), tempRecords: .constant([]))
 }
