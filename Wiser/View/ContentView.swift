@@ -43,6 +43,22 @@ struct ContentView: View {
         return (String(format: "%02d", hours), String(format: "%02d", minutes))
     }
     
+    var formattedDuration: (number: String, unit: String) {
+        guard let checkInTime = checkInTime else {
+            return ("0", "HOUR")
+        }
+        
+        let durationInSeconds = Date().timeIntervalSince(checkInTime)
+        let minutes = Int(durationInSeconds / 60)
+        
+        if minutes < 60 {
+            return (String(minutes), "MIN")
+        } else {
+            let hours = Double(minutes) / 60.0
+            return (String(format: "%.1f", hours), "HOUR")
+        }
+    }
+    
     var formattedCheckInTime: (number: String, unit: String) {
         guard let checkInTime = checkInTime else {
             return ("--:--", "")
@@ -95,7 +111,7 @@ struct ContentView: View {
                 CountInfo(logo:"clock", name:"Start time", number: formattedCheckInTime.number, unit: formattedCheckInTime.unit)
                     .padding(.bottom, 42)
                 
-                CountInfo(logo:"ruler", name:"Total duration", number:"0", unit:"HOUR")
+                CountInfo(logo:"ruler", name:"Total duration", number: formattedDuration.number, unit: formattedDuration.unit)
                 
                  Spacer()
                 
