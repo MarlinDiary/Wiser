@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import Foundation
+import Combine
 
 struct ContentView: View {
     
@@ -15,6 +16,9 @@ struct ContentView: View {
     @State var currentLabel: Label?
     @State var checkInTime: Date?
     @State private var tempRecords: [TempTimeRecord] = []
+    @State private var currentTime = Date()
+    @State private var timer: Timer.TimerPublisher = Timer.publish(every: 1, on: .main, in: .common)
+    @State private var timerConnector: Cancellable?
     
     @Query private var labels: [Label]
     @Query private var allTimeLogs: [TimeLog]
@@ -69,12 +73,15 @@ struct ContentView: View {
     }
     
     var formattedDuration: (number: String, unit: String) {
-        guard let checkInTime = checkInTime else {
-            return ("0", "HOUR")
+        // 使用tempRecords计算总时长
+        let totalSeconds = tempRecords.reduce(0.0) { result, record in
+            // 如果没有结束时间，则使用当前时间
+            let endTime = record.endTime ?? currentTime
+            let duration = endTime.timeIntervalSince(record.startTime)
+            return result + duration
         }
         
-        let durationInSeconds = Date().timeIntervalSince(checkInTime)
-        let minutes = Int(durationInSeconds / 60)
+        let minutes = Int(totalSeconds / 60)
         
         if minutes < 60 {
             return (String(minutes), "MIN")
@@ -132,7 +139,7 @@ struct ContentView: View {
                             }
                         }
                     }
-                ), status: $status, labels: labels)
+                ), status: $status, labels: labels, tempRecords: tempRecords)
             }
             
             Spacer()
@@ -163,6 +170,12 @@ struct ContentView: View {
             if labels.count > 0 && currentLabel == nil {
                 currentLabel = labels.first
             }
+            // 启动计时器
+            self.timerConnector = self.timer.connect()
+        }
+        .onDisappear {
+            // 停止计时器
+            self.timerConnector?.cancel()
         }
         .onChange(of: labels) { oldValue, newValue in
             if newValue.count > 0 && currentLabel == nil {
@@ -171,6 +184,10 @@ struct ContentView: View {
         }
         .onChange(of: tempRecords) { oldValue, newValue in
             print("newValue: \(newValue)")
+        }
+        .onReceive(timer) { _ in
+            // 更新当前时间
+            self.currentTime = Date()
         }
     }
 }
