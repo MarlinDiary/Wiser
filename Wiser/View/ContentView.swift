@@ -26,6 +26,22 @@ struct ContentView: View {
         }.sorted { $0.startTime < $1.startTime }
     }
     
+    var totalTimeToday: (hour: String, minute: String) {
+        let totalSeconds = todayTimeLogs.reduce(0) { result, timeLog in
+            guard let endTime = timeLog.endTime else {
+                let duration = Date().timeIntervalSince(timeLog.startTime)
+                return result + duration
+            }
+            let duration = endTime.timeIntervalSince(timeLog.startTime)
+            return result + duration
+        }
+        
+        let hours = Int(totalSeconds) / 3600
+        let minutes = (Int(totalSeconds) % 3600) / 60
+        
+        return (String(format: "%02d", hours), String(format: "%02d", minutes))
+    }
+    
     var body: some View {
         VStack {
             HStack {
@@ -47,7 +63,7 @@ struct ContentView: View {
             Spacer()
             Spacer()
             
-            HeroTitle(hour: "24", minute: "00")
+            HeroTitle(hour: totalTimeToday.hour, minute: totalTimeToday.minute)
             
             Spacer()
             
