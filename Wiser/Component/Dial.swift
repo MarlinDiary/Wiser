@@ -10,6 +10,7 @@ import SwiftUI
 struct Dial: View {
     @Binding var currentLabel: String
     @Binding var Labels: [Label]
+    @Binding var status: HomeStatus
     
     var body: some View {
         TabView {
@@ -29,5 +30,13 @@ struct Dial: View {
 }
 
 #Preview {
-    Dial(currentLabel: .constant("React"), Labels: .constant(Label.exampleLabels))
+    Dial(currentLabel: .constant("React"), Labels: .constant(Label.exampleLabels), status: .constant(.home))
+}
+
+#Preview {
+    Dial(currentLabel: .constant("React"), Labels: .constant(Label.exampleLabels), status: .constant(.log))
+}
+
+#Preview {
+    Dial(currentLabel: .constant("React"), Labels: .constant(Label.exampleLabels), status: .constant(.count))
 }
