@@ -51,6 +51,7 @@ struct LabelView: View {
             }
             .navigationTitle(Text("Label"))
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(Color.white, for: .navigationBar)
         }
     }
 }

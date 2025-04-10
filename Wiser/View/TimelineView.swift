@@ -74,6 +74,7 @@ struct TimelineView: View {
             .background(Color.white)
             .navigationTitle("Timeline")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(Color.white, for: .navigationBar)
         }
     }
 }
