@@ -155,16 +155,17 @@ struct ContentView: View {
             Spacer()
             
             if status != .count {
-                HeroTitle(hour: totalTimeToday.hour, minute: totalTimeToday.minute)
-                
-                Spacer()
                 
                 Button {
                     showingTimeline = true
                 } label: {
-                    Heatmap()
+                    HeroTitle(hour: totalTimeToday.hour, minute: totalTimeToday.minute)
                 }
                 .buttonStyle(PlainButtonStyle())
+                
+                Spacer()
+                
+                Heatmap()
             } else {
                 CountInfo(logo:"clock", name:"Start time", number: formattedCheckInTime.number, unit: formattedCheckInTime.unit)
                     .padding(.bottom, 33)
