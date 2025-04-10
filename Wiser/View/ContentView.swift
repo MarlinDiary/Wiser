@@ -20,6 +20,7 @@ struct ContentView: View {
     @State private var timer: Timer.TimerPublisher = Timer.publish(every: 1, on: .main, in: .common)
     @State private var timerConnector: Cancellable?
     @State private var showingTimeline = false
+    @State private var showingLabelView = false
     
     @Query private var labels: [Label]
     @Query private var allTimeLogs: [TimeLog]
@@ -114,7 +115,13 @@ struct ContentView: View {
         VStack {
             HStack {
                 if let currentLabel = currentLabel {
-                    LabelIndicator(status: $status, currentLabel: currentLabel)
+                    Button {
+                        showingLabelView = true
+                    } label: {
+                        LabelIndicator(status: $status, currentLabel: currentLabel)
+                            .foregroundStyle(.black)
+                    }
+                    .disabled(status == .count || status == .log)
                 }
                 Spacer()
                 HomeStatusControl(status: $status)
@@ -174,6 +181,9 @@ struct ContentView: View {
         }
         .popover(isPresented: $showingTimeline) {
             TimelineView()
+        }
+        .popover(isPresented: $showingLabelView) {
+            LabelView()
         }
         .onAppear {
             if labels.count > 0 && currentLabel == nil {

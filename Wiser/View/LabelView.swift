@@ -10,7 +10,6 @@ import SwiftData
 
 struct LabelView: View {
     @Query(sort: \Label.name) private var labels: [Label]
-    @State private var selectedLabel: Label?
     
     var body: some View {
         NavigationStack {
