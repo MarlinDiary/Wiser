@@ -32,7 +32,15 @@ struct HomeButton: View {
                 if let lastIndex = tempRecords.lastIndex(where: { $0.endTime == nil }) {
                     var lastRecord = tempRecords[lastIndex]
                     lastRecord.endTime = Date()
-                    tempRecords[lastIndex] = lastRecord
+                    
+                    // 检查最后一条记录的持续时间是否小于30秒
+                    if lastRecord.endTime!.timeIntervalSince(lastRecord.startTime) < 30 {
+                        // 如果不足30秒，直接删除这条记录
+                        tempRecords.remove(at: lastIndex)
+                    } else {
+                        // 否则更新这条记录
+                        tempRecords[lastIndex] = lastRecord
+                    }
                 }
                 
                 // 将所有有效的临时记录保存为TimeLog
