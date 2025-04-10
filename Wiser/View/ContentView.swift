@@ -14,6 +14,7 @@ struct ContentView: View {
     
     @State var status: HomeStatus = .home
     @State var currentLabel: Label?
+    @AppStorage("selectedLabelID") private var selectedLabelID: String = ""
     @State var checkInTime: Date?
     @State private var tempRecords: [TempTimeRecord] = []
     @State private var currentTime = Date()
@@ -22,7 +23,7 @@ struct ContentView: View {
     @State private var showingTimeline = false
     @State private var showingLabelView = false
     
-    @Query private var labels: [Label]
+    @Query(sort: \Label.name) private var labels: [Label]
     @Query private var allTimeLogs: [TimeLog]
     @Environment(\.modelContext) private var modelContext
     
@@ -186,7 +187,10 @@ struct ContentView: View {
             LabelView()
         }
         .onAppear {
-            if labels.count > 0 && currentLabel == nil {
+            if let savedID = UUID(uuidString: selectedLabelID),
+               let savedLabel = labels.first(where: { $0.id == savedID }) {
+                currentLabel = savedLabel
+            } else if labels.count > 0 && currentLabel == nil {
                 currentLabel = labels.first
             }
             // 启动计时器
@@ -199,6 +203,11 @@ struct ContentView: View {
         .onChange(of: labels) { oldValue, newValue in
             if newValue.count > 0 && currentLabel == nil {
                 currentLabel = newValue.first
+            }
+        }
+        .onChange(of: currentLabel) { oldValue, newValue in
+            if let label = newValue {
+                selectedLabelID = label.id.uuidString
             }
         }
         .onReceive(timer) { _ in
