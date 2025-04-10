@@ -19,6 +19,7 @@ struct ContentView: View {
     @State private var currentTime = Date()
     @State private var timer: Timer.TimerPublisher = Timer.publish(every: 1, on: .main, in: .common)
     @State private var timerConnector: Cancellable?
+    @State private var showingTimeline = false
     
     @Query private var labels: [Label]
     @Query private var allTimeLogs: [TimeLog]
@@ -150,7 +151,12 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                Heatmap()
+                Button {
+                    showingTimeline = true
+                } label: {
+                    Heatmap()
+                }
+                .buttonStyle(PlainButtonStyle())
             } else {
                 CountInfo(logo:"clock", name:"Start time", number: formattedCheckInTime.number, unit: formattedCheckInTime.unit)
                     .padding(.bottom, 42)
@@ -165,6 +171,9 @@ struct ContentView: View {
             Spacer()
             
             HomeButton(status: $status, currentLabel: $currentLabel, checkInTime: $checkInTime, tempRecords: $tempRecords)
+        }
+        .popover(isPresented: $showingTimeline) {
+            TimelineView()
         }
         .onAppear {
             if labels.count > 0 && currentLabel == nil {
