@@ -11,6 +11,7 @@ import SwiftData
 struct LabelView: View {
     @Query(sort: \Label.name) private var labels: [Label]
     @Environment(\.dismiss) private var dismiss
+    @State private var showingAddLabelView = false
     
     var body: some View {
         NavigationStack {
@@ -67,7 +68,7 @@ struct LabelView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        // 按钮点击动作
+                        showingAddLabelView = true
                     } label: {
                         Image(systemName: "plus")
                             .bold()
@@ -76,6 +77,9 @@ struct LabelView: View {
                     }
                 }
             }
+        }
+        .sheet(isPresented: $showingAddLabelView) {
+            AddLabelView()
         }
     }
 }

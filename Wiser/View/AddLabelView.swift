@@ -17,6 +17,7 @@ struct AddLabelView: View {
     @State private var labelName: String = ""
     @State private var isEditingName: Bool = false
     @FocusState private var focusField: FocusField?
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationStack {
@@ -49,7 +50,7 @@ struct AddLabelView: View {
                 
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        
+                        dismiss()
                     } label: {
                         Image(systemName: "plus")
                             .bold()
