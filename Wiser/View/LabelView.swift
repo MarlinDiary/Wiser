@@ -27,7 +27,6 @@ struct LabelView: View {
                                 }
                             }
                             .padding(.top)
-                            .padding(.horizontal)
                         }
                         
                         LinearGradient(
@@ -52,6 +51,16 @@ struct LabelView: View {
             .navigationTitle(Text("Label"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color.white, for: .navigationBar)
+            .toolbar {
+                    Button {
+                        // 按钮点击动作
+                    } label: {
+                        Image(systemName: "plus")
+                            .bold()
+                            .foregroundStyle(.black)
+                            .font(.system(size: 14))
+                    }
+            }
         }
     }
 }

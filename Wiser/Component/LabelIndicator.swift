@@ -30,6 +30,7 @@ struct LabelIndicator: View {
                 .frame(width: 12, height: 12)
             
             Text(currentLabel.name)
+                .font(.system(size: 17))
                 .bold()
             
             if status == .home {

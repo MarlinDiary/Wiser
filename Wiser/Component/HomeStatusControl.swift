@@ -21,6 +21,7 @@ struct HomeStatusControl: View {
                 Image(systemName: "xmark")
             }
         }
+        .font(.system(size: 17))
         .bold()
     }
 }
