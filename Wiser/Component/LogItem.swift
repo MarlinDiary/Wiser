@@ -47,7 +47,7 @@ struct LogItem: View {
                 .font(.title2)
                 .fontWeight(.medium)
         }
-        .padding()
+        //.padding()
     }
 }
 
