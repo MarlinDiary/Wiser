@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct LabelAvatarBig: View {
-    var label: Label
+struct IconAvatarBig: View {
+    var icon: Icon
     
     var body: some View {
             Circle()
@@ -20,7 +20,7 @@ struct LabelAvatarBig: View {
                         .foregroundStyle(.gray3)
                         .frame(width: 66, height: 66)
                     
-                    Image(label.icon.image)
+                    Image(icon.image)
                         .resizable()
                         .frame(width: 78, height: 78)
                         .mask {
@@ -33,5 +33,5 @@ struct LabelAvatarBig: View {
 }
 
 #Preview {
-    LabelAvatarBig(label: Label.exampleLabels[1])
+    IconAvatarBig(icon: .dog)
 }
