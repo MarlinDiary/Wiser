@@ -10,6 +10,7 @@ import SwiftData
 
 struct LabelView: View {
     @Query(sort: \Label.name) private var labels: [Label]
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationStack {
@@ -52,6 +53,18 @@ struct LabelView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color.white, for: .navigationBar)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .bold()
+                            .foregroundStyle(.black)
+                            .font(.system(size: 12))
+                    }
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         // 按钮点击动作
                     } label: {
@@ -60,6 +73,7 @@ struct LabelView: View {
                             .foregroundStyle(.black)
                             .font(.system(size: 14))
                     }
+                }
             }
         }
     }
