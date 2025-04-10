@@ -47,7 +47,7 @@ struct LabelView: View {
                     }
                 }
                 
-                Tip(title: "Focus Tip", content: "If you study until 12:30, you will exceed the duration of your study from yesterday morning.")
+                Tip(title: "Label Tip", content: "If you study until 12:30, you will exceed the duration of your study from yesterday morning.")
             }
             .navigationTitle(Text("Label"))
             .navigationBarTitleDisplayMode(.inline)

@@ -167,7 +167,7 @@ struct ContentView: View {
                 .buttonStyle(PlainButtonStyle())
             } else {
                 CountInfo(logo:"clock", name:"Start time", number: formattedCheckInTime.number, unit: formattedCheckInTime.unit)
-                    .padding(.bottom, 42)
+                    .padding(.bottom, 33)
                 
                 CountInfo(logo:"ruler", name:"Total duration", number: formattedDuration.number, unit: formattedDuration.unit)
                 

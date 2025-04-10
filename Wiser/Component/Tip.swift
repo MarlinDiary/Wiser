@@ -19,6 +19,7 @@ struct Tip: View {
                 .font(.system(size: 15))
                 .padding(.bottom, 18)
             Text(content)
+                .lineSpacing(9)
                 .font(.system(size: 13))
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.gray4)
