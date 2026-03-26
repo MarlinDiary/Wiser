@@ -21,8 +21,7 @@ struct RockTopView: View {
 
     var body: some View {
         Image("RockTop")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
+            .frame(width: 131, height: 84)
             .rotationEffect(.degrees(rotation))
             .brightness(colorScheme == .dark ? 0 : -0.33)
     }

@@ -14,19 +14,16 @@ struct RockBottomView: View {
     var body: some View {
         ZStack {
             Image("RockBottom")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+                .frame(width: 180, height: 91)
 
             if state == .idle {
                 Image("RockBottomShadowIdle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 180, height: 91)
             }
 
             if state == .paused {
                 Image("RockBottomShadowPaused")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 180, height: 91)
             }
         }
         .brightness(colorScheme == .dark ? 0 : -0.33)

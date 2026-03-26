@@ -14,19 +14,16 @@ struct RockMiddleView: View {
     var body: some View {
         ZStack {
             Image("RockMiddle")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+                .frame(width: 294, height: 136)
 
             if state == .idle {
                 Image("RockMiddleShadowIdle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 294, height: 136)
             }
 
             if state == .paused {
                 Image("RockMiddleShadowPaused")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 294, height: 136)
             }
         }
         .rotationEffect(.degrees(state == .paused ? -9 : 0))
