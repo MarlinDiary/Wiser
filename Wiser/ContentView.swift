@@ -13,6 +13,18 @@ struct ContentView: View {
         Color(.secondarySystemBackground)
     }
 
+    private func formattedDuration(totalMinutes: Int) -> String {
+        let hours = totalMinutes / 60
+        let minutes = totalMinutes % 60
+        if hours == 0 {
+            return "\(minutes) min"
+        } else if minutes == 0 {
+            return "\(hours) hr"
+        } else {
+            return "\(hours)hr \(minutes)min"
+        }
+    }
+
     var body: some View {
         ZStack {
             backgroundColor
@@ -26,6 +38,11 @@ struct ContentView: View {
                 RockStackView(state: .idle)
                     .scaleEffect(0.5)
                     .frame(height: 364 * 0.5)
+                    .padding(.bottom, 16)
+                Text(formattedDuration(totalMinutes: 0))
+                    .font(.system(size: 40, weight: .medium, design: .rounded))
+                    .monospacedDigit()
+                    .foregroundStyle(.primary)
                 Spacer()
                 Button(action: {
                     // TODO
