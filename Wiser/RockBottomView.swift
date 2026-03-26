@@ -16,17 +16,16 @@ struct RockBottomView: View {
             Image("RockBottom")
                 .frame(width: 180, height: 91)
 
-            if state == .idle {
-                Image("RockBottomShadowIdle")
-                    .frame(width: 180, height: 91)
-            }
+            Image("RockBottomShadowIdle")
+                .frame(width: 180, height: 91)
+                .opacity(state == .idle ? 1 : 0)
 
-            if state == .paused {
-                Image("RockBottomShadowPaused")
-                    .frame(width: 180, height: 91)
-            }
+            Image("RockBottomShadowPaused")
+                .frame(width: 180, height: 91)
+                .opacity(state == .paused ? 1 : 0)
         }
         .brightness(colorScheme == .dark ? 0 : -0.33)
+        .animation(.easeInOut(duration: 0.75), value: state)
     }
 }
 

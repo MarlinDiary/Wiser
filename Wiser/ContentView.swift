@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.colorScheme) private var colorScheme
-
     var backgroundColor: Color {
         colorScheme == .dark
             ? Color(red: 0x54/255.0, green: 0x54/255.0, blue: 0x5C/255.0)

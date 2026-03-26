@@ -16,18 +16,17 @@ struct RockMiddleView: View {
             Image("RockMiddle")
                 .frame(width: 294, height: 136)
 
-            if state == .idle {
-                Image("RockMiddleShadowIdle")
-                    .frame(width: 294, height: 136)
-            }
+            Image("RockMiddleShadowIdle")
+                .frame(width: 294, height: 136)
+                .opacity(state == .idle ? 1 : 0)
 
-            if state == .paused {
-                Image("RockMiddleShadowPaused")
-                    .frame(width: 294, height: 136)
-            }
+            Image("RockMiddleShadowPaused")
+                .frame(width: 294, height: 136)
+                .opacity(state == .paused ? 1 : 0)
         }
         .rotationEffect(.degrees(state == .paused ? -9 : 0))
         .brightness(colorScheme == .dark ? 0 : -0.33)
+        .animation(.easeInOut(duration: 0.75), value: state)
     }
 }
 

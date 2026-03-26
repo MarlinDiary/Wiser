@@ -42,6 +42,7 @@ struct RockStackView: View {
                 .padding(.bottom, topPadding)
         }
         .frame(height: 364, alignment: .bottom)
+        .animation(.easeInOut(duration: 0.75), value: state)
     }
 }
 
