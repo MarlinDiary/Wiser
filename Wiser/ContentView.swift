@@ -24,6 +24,9 @@ struct ContentView: View {
                 .resizable(resizingMode: .tile)
                 .ignoresSafeArea()
                 .opacity(colorScheme == .dark ? 0.05 : 1)
+            RockStackView(state: .idle)
+                .scaleEffect(0.5)
+                .frame(height: 364 * 0.5)
         }
     }
 }
