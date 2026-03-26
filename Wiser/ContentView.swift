@@ -12,7 +12,7 @@ struct ContentView: View {
     var backgroundColor: Color {
         colorScheme == .dark
             ? Color(red: 0x54/255.0, green: 0x54/255.0, blue: 0x5C/255.0)
-            : Color(red: 0xEC/255.0, green: 0xEE/255.0, blue: 0xEE/255.0)
+            : Color(red: 0xF2/255.0, green: 0xF2/255.0, blue: 0xF6/255.0)
     }
 
     var body: some View {
@@ -23,9 +23,21 @@ struct ContentView: View {
                 .resizable(resizingMode: .tile)
                 .ignoresSafeArea()
                 .opacity(colorScheme == .dark ? 0.05 : 1)
-            RockStackView(state: .idle)
-                .scaleEffect(0.5)
-                .frame(height: 364 * 0.5)
+            VStack {
+                Spacer()
+                RockStackView(state: .idle)
+                    .scaleEffect(0.5)
+                    .frame(height: 364 * 0.5)
+                Spacer()
+                Button(action: {
+                    // TODO
+                }) {
+                    Label("Start Focus", systemImage: "play.fill")
+                        .font(.headline)
+                        .padding(8)
+                }
+                .buttonStyle(.glass)
+            }
         }
     }
 }
