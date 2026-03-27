@@ -12,6 +12,12 @@ struct ContentView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var locationManager = LocationManager()
     @State private var greetingProvider = GreetingProvider()
+    @State private var isFocusing = false
+    @State private var isPaused = false
+    @State private var isMusicOn = false
+    @State private var isBrightScreen = false
+    @State private var focusMinutes = 0
+    @State private var timer: Timer?
 
     var backgroundColor: Color {
         Color(.secondarySystemBackground)
@@ -40,10 +46,14 @@ struct ContentView: View {
             VStack {
                 HStack {
                     Button(action: {
-                        // TODO
+                        if isFocusing {
+                            isBrightScreen.toggle()
+                        }
                     }) {
-                        Image(systemName: "gear")
+                        Image(systemName: isFocusing ? (isBrightScreen ? "sun.max.fill" : "sun.min") : "gear")
+                            .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
                             .font(.headline)
+                            .frame(width: 20, height: 20)
                             .padding(8)
                     }
                     .buttonStyle(.glass)
@@ -51,10 +61,14 @@ struct ContentView: View {
                     .padding(.leading, 16)
                     Spacer()
                     Button(action: {
-                        // TODO
+                        if isFocusing {
+                            isMusicOn.toggle()
+                        }
                     }) {
-                        Image(systemName: "plus")
+                        Image(systemName: isFocusing ? (isMusicOn ? "music.note" : "music.note.slash") : "plus")
+                            .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
                             .font(.headline)
+                            .frame(width: 20, height: 20)
                             .padding(8)
                     }
                     .buttonStyle(.glass)
@@ -66,20 +80,37 @@ struct ContentView: View {
                     .font(.system(.subheadline, design: .rounded))
                     .foregroundStyle(.secondary)
                     .padding(.bottom, 16)
-                RockStackView(state: .idle)
+                    .opacity(isFocusing ? 0 : 1)
+                    .animation(.easeInOut(duration: 0.3), value: isFocusing)
+                RockStackView(state: isFocusing ? (isPaused ? .paused : .checked) : .idle)
                     .scaleEffect(0.5)
                     .frame(height: 364 * 0.5)
                     .padding(.bottom, 16)
-                Text(formattedDuration(totalMinutes: 0))
+                Text(formattedDuration(totalMinutes: focusMinutes))
                     .font(.system(size: 40, weight: .medium, design: .rounded))
                     .monospacedDigit()
                     .foregroundStyle(.primary)
                 Spacer()
                 ZStack {
                     Button(action: {
-                        // TODO
+                        if isFocusing {
+                            isFocusing = false
+                            isPaused = false
+                            isMusicOn = false
+                            isBrightScreen = false
+                            timer?.invalidate()
+                            timer = nil
+                        } else {
+                            isFocusing = true
+                            focusMinutes = 0
+                            timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
+                                focusMinutes += 1
+                            }
+                        }
                     }) {
-                        Label("Start Focus", systemImage: "play.fill")
+                        Label(isFocusing ? "Stop" : "Start Focus",
+                              systemImage: isFocusing ? "stop.fill" : "play.fill")
+
                             .font(.headline)
                             .padding(8)
                     }
@@ -89,8 +120,10 @@ struct ContentView: View {
                         Button(action: {
                             // TODO
                         }) {
-                            Image(systemName: "chart.bar.fill")
+                            Image(systemName: isFocusing ? "backward.end.fill" : "chart.bar.fill")
+                                .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
                                 .font(.headline)
+                                .frame(width: 20, height: 20)
                                 .padding(8)
                         }
                         .buttonStyle(.glass)
@@ -98,10 +131,23 @@ struct ContentView: View {
                         .padding(.leading, 16)
                         Spacer()
                         Button(action: {
-                            // TODO
+                            if isFocusing {
+                                if isPaused {
+                                    isPaused = false
+                                    timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
+                                        focusMinutes += 1
+                                    }
+                                } else {
+                                    isPaused = true
+                                    timer?.invalidate()
+                                    timer = nil
+                                }
+                            }
                         }) {
-                            Image(systemName: "sparkles")
+                            Image(systemName: isFocusing ? (isPaused ? "play.fill" : "pause.fill") : "sparkles")
+                                .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
                                 .font(.headline)
+                                .frame(width: 20, height: 20)
                                 .padding(8)
                         }
                         .buttonStyle(.glass)
