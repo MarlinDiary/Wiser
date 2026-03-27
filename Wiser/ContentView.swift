@@ -34,6 +34,29 @@ struct ContentView: View {
                 .ignoresSafeArea()
                 .opacity(colorScheme == .dark ? 0.05 : 1)
             VStack {
+                HStack {
+                    Button(action: {
+                        // TODO
+                    }) {
+                        Image(systemName: "gear")
+                            .font(.headline)
+                            .padding(8)
+                    }
+                    .buttonStyle(.glass)
+                    .buttonBorderShape(.circle)
+                    .padding(.leading, 16)
+                    Spacer()
+                    Button(action: {
+                        // TODO
+                    }) {
+                        Image(systemName: "plus")
+                            .font(.headline)
+                            .padding(8)
+                    }
+                    .buttonStyle(.glass)
+                    .buttonBorderShape(.circle)
+                    .padding(.trailing, 16)
+                }
                 Spacer()
                 RockStackView(state: .idle)
                     .scaleEffect(0.5)
@@ -44,14 +67,40 @@ struct ContentView: View {
                     .monospacedDigit()
                     .foregroundStyle(.primary)
                 Spacer()
-                Button(action: {
-                    // TODO
-                }) {
-                    Label("Start Focus", systemImage: "play.fill")
-                        .font(.headline)
-                        .padding(8)
+                ZStack {
+                    Button(action: {
+                        // TODO
+                    }) {
+                        Label("Start Focus", systemImage: "play.fill")
+                            .font(.headline)
+                            .padding(8)
+                    }
+                    .buttonStyle(.glass)
+
+                    HStack {
+                        Button(action: {
+                            // TODO
+                        }) {
+                            Image(systemName: "chart.bar.fill")
+                                .font(.headline)
+                                .padding(8)
+                        }
+                        .buttonStyle(.glass)
+                        .buttonBorderShape(.circle)
+                        .padding(.leading, 16)
+                        Spacer()
+                        Button(action: {
+                            // TODO
+                        }) {
+                            Image(systemName: "sparkles")
+                                .font(.headline)
+                                .padding(8)
+                        }
+                        .buttonStyle(.glass)
+                        .buttonBorderShape(.circle)
+                        .padding(.trailing, 16)
+                    }
                 }
-                .buttonStyle(.glass)
             }
         }
     }
