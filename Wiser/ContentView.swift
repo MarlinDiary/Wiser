@@ -6,18 +6,25 @@
 //
 
 import SwiftUI
+import SwiftData
 import CoreLocation
 
 struct ContentView: View {
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.modelContext) private var modelContext
+    @Query private var allSessions: [FocusSession]
     @State private var locationManager = LocationManager()
     @State private var greetingProvider = GreetingProvider()
-    @State private var isFocusing = false
-    @State private var isPaused = false
+    @State private var focusTimer = FocusTimer()
     @State private var isMusicOn = false
     @State private var isBrightScreen = false
-    @State private var focusMinutes = 0
-    @State private var timer: Timer?
+
+    private var todayMinutes: Int {
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        return allSessions
+            .filter { $0.startDate >= startOfDay }
+            .reduce(0) { $0 + $1.durationMinutes }
+    }
 
     var backgroundColor: Color {
         Color(.secondarySystemBackground)
@@ -46,11 +53,11 @@ struct ContentView: View {
             VStack {
                 HStack {
                     Button(action: {
-                        if isFocusing {
+                        if focusTimer.isRunning {
                             isBrightScreen.toggle()
                         }
                     }) {
-                        Image(systemName: isFocusing ? (isBrightScreen ? "sun.max.fill" : "sun.min") : "gear")
+                        Image(systemName: focusTimer.isRunning ? (isBrightScreen ? "sun.max.fill" : "sun.min") : "gear")
                             .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
                             .font(.headline)
                             .frame(width: 20, height: 20)
@@ -61,11 +68,11 @@ struct ContentView: View {
                     .padding(.leading, 16)
                     Spacer()
                     Button(action: {
-                        if isFocusing {
+                        if focusTimer.isRunning {
                             isMusicOn.toggle()
                         }
                     }) {
-                        Image(systemName: isFocusing ? (isMusicOn ? "music.note" : "music.note.slash") : "plus")
+                        Image(systemName: focusTimer.isRunning ? (isMusicOn ? "music.note" : "music.note.slash") : "plus")
                             .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
                             .font(.headline)
                             .frame(width: 20, height: 20)
@@ -76,40 +83,36 @@ struct ContentView: View {
                     .padding(.trailing, 16)
                 }
                 Spacer()
-                Label("Today 0 min", systemImage: greetingProvider.displaySymbol)
+                Label("Today \(formattedDuration(totalMinutes: todayMinutes))", systemImage: greetingProvider.displaySymbol)
                     .font(.system(.subheadline, design: .rounded))
                     .foregroundStyle(.secondary)
                     .padding(.bottom, 16)
-                    .opacity(isFocusing ? 0 : 1)
-                    .animation(.easeInOut(duration: 0.3), value: isFocusing)
-                RockStackView(state: isFocusing ? (isPaused ? .paused : .checked) : .idle)
+                    .opacity(focusTimer.isRunning ? 0 : 1)
+                    .animation(.easeInOut(duration: 0.3), value: focusTimer.isRunning)
+                RockStackView(state: focusTimer.isRunning ? (focusTimer.isPaused ? .paused : .checked) : .idle)
                     .scaleEffect(0.66)
                     .frame(height: 364 * 0.66)
                     .padding(.bottom, 16)
-                Text(formattedDuration(totalMinutes: focusMinutes))
+                Text(formattedDuration(totalMinutes: focusTimer.totalMinutes))
                     .font(.system(size: 40, weight: .medium, design: .rounded))
                     .monospacedDigit()
                     .foregroundStyle(.primary)
                 Spacer()
                 ZStack {
                     Button(action: {
-                        if isFocusing {
-                            isFocusing = false
-                            isPaused = false
+                        if focusTimer.isRunning {
+                            if let result = focusTimer.stop() {
+                                let session = FocusSession(startDate: result.startDate, durationSeconds: result.duration)
+                                modelContext.insert(session)
+                            }
                             isMusicOn = false
                             isBrightScreen = false
-                            timer?.invalidate()
-                            timer = nil
                         } else {
-                            isFocusing = true
-                            focusMinutes = 0
-                            timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
-                                focusMinutes += 1
-                            }
+                            focusTimer.start()
                         }
                     }) {
-                        Label(isFocusing ? "Stop" : "Start Focus",
-                              systemImage: isFocusing ? "stop.fill" : "play.fill")
+                        Label(focusTimer.isRunning ? "Stop" : "Start Focus",
+                              systemImage: focusTimer.isRunning ? "stop.fill" : "play.fill")
 
                             .font(.headline)
                             .padding(8)
@@ -120,7 +123,7 @@ struct ContentView: View {
                         Button(action: {
                             // TODO
                         }) {
-                            Image(systemName: isFocusing ? "backward.end.fill" : "chart.bar.fill")
+                            Image(systemName: focusTimer.isRunning ? "backward.end.fill" : "chart.bar.fill")
                                 .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
                                 .font(.headline)
                                 .frame(width: 20, height: 20)
@@ -131,20 +134,15 @@ struct ContentView: View {
                         .padding(.leading, 16)
                         Spacer()
                         Button(action: {
-                            if isFocusing {
-                                if isPaused {
-                                    isPaused = false
-                                    timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
-                                        focusMinutes += 1
-                                    }
+                            if focusTimer.isRunning {
+                                if focusTimer.isPaused {
+                                    focusTimer.resume()
                                 } else {
-                                    isPaused = true
-                                    timer?.invalidate()
-                                    timer = nil
+                                    focusTimer.pause()
                                 }
                             }
                         }) {
-                            Image(systemName: isFocusing ? (isPaused ? "play.fill" : "pause.fill") : "sparkles")
+                            Image(systemName: focusTimer.isRunning ? (focusTimer.isPaused ? "play.fill" : "pause.fill") : "sparkles")
                                 .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
                                 .font(.headline)
                                 .frame(width: 20, height: 20)
@@ -170,4 +168,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .modelContainer(for: FocusSession.self, inMemory: true)
 }
