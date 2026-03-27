@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct ContentView: View {
     @Environment(\.colorScheme) private var colorScheme
+    @State private var locationManager = LocationManager()
+    @State private var greetingProvider = GreetingProvider()
+
     var backgroundColor: Color {
         Color(.secondarySystemBackground)
     }
@@ -58,6 +62,10 @@ struct ContentView: View {
                     .padding(.trailing, 16)
                 }
                 Spacer()
+                Label("Today 0 min", systemImage: greetingProvider.displaySymbol)
+                    .font(.system(.subheadline, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .padding(.bottom, 16)
                 RockStackView(state: .idle)
                     .scaleEffect(0.5)
                     .frame(height: 364 * 0.5)
@@ -101,6 +109,14 @@ struct ContentView: View {
                         .padding(.trailing, 16)
                     }
                 }
+            }
+        }
+        .onAppear {
+            locationManager.requestLocation()
+        }
+        .task(id: locationManager.location?.coordinate.latitude) {
+            if let location = locationManager.location {
+                await greetingProvider.fetchWeather(for: location)
             }
         }
     }

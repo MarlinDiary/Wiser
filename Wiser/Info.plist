@@ -6,5 +6,7 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Wiser uses your location to determine sunrise and sunset times for personalized greetings.</string>
 </dict>
 </plist>
