@@ -24,7 +24,7 @@ struct RockBottomView: View {
                 .frame(width: 180, height: 91)
                 .opacity(state == .paused ? 1 : 0)
         }
-        .brightness(colorScheme == .dark ? 0 : -0.33)
+        .brightness(colorScheme == .dark ? 0 : -0.25)
         .animation(.easeInOut(duration: 0.75), value: state)
     }
 }

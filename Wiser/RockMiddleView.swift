@@ -25,7 +25,7 @@ struct RockMiddleView: View {
                 .opacity(state == .paused ? 1 : 0)
         }
         .rotationEffect(.degrees(state == .paused ? -9 : 0))
-        .brightness(colorScheme == .dark ? 0 : -0.33)
+        .brightness(colorScheme == .dark ? 0 : -0.25)
         .animation(.easeInOut(duration: 0.75), value: state)
     }
 }
