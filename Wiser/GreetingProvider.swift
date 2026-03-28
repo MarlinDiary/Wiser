@@ -16,6 +16,18 @@ final class GreetingProvider {
     private(set) var weatherSymbol: String?
     private let weatherService = WeatherService.shared
 
+    private let defaults = UserDefaults.standard
+    private enum Keys {
+        static let weatherSymbol = "GreetingProvider.weatherSymbol"
+        static let lastFetchDate = "GreetingProvider.lastFetchDate"
+    }
+
+    private var refreshInterval: TimeInterval { 30 * 60 } // 30 minutes
+
+    init() {
+        weatherSymbol = defaults.string(forKey: Keys.weatherSymbol)
+    }
+
     var greeting: String {
         let now = Date()
         guard let sunrise, let sunset else {
@@ -57,9 +69,16 @@ final class GreetingProvider {
         if let weatherSymbol { return weatherSymbol }
         let hour = Calendar.current.component(.hour, from: Date())
         switch hour {
-        case 6..<18: return "sun.max.fill"
-        default: return "moon.stars.fill"
+        case 6..<18: return "sun.max"
+        default: return "moon.stars"
         }
+    }
+
+    var needsRefresh: Bool {
+        guard let lastFetch = defaults.object(forKey: Keys.lastFetchDate) as? Date else {
+            return true
+        }
+        return Date().timeIntervalSince(lastFetch) > refreshInterval
     }
 
     private var fallbackGreeting: String {
@@ -79,7 +98,11 @@ final class GreetingProvider {
                 sunrise = today.sun.sunrise
                 sunset = today.sun.sunset
             }
-            weatherSymbol = weather.currentWeather.symbolName
+            withAnimation(.easeInOut(duration: 0.5)) {
+                weatherSymbol = weather.currentWeather.symbolName
+            }
+            defaults.set(weatherSymbol, forKey: Keys.weatherSymbol)
+            defaults.set(Date(), forKey: Keys.lastFetchDate)
         } catch {
             print("WeatherKit error: \(error.localizedDescription)")
         }

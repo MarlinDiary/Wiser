@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import CoreLocation
+import Combine
 
 struct ContentView: View {
     @Environment(\.colorScheme) private var colorScheme
@@ -96,6 +97,7 @@ struct ContentView: View {
                 }
                 Spacer()
                 Label("Today \(formattedDuration(totalMinutes: todayMinutes))", systemImage: greetingProvider.displaySymbol)
+                    .contentTransition(.symbolEffect(.replace))
                     .font(.system(.subheadline, design: .rounded))
                     .foregroundStyle(.secondary)
                     .padding(.bottom, 16)
@@ -121,6 +123,9 @@ struct ContentView: View {
                             }
                             isMusicOn = false
                             isBrightScreen = false
+                            if let location = locationManager.location {
+                                Task { await greetingProvider.fetchWeather(for: location) }
+                            }
                         } else {
                             focusTimer.start()
                         }
@@ -173,8 +178,12 @@ struct ContentView: View {
             locationManager.requestLocation()
         }
         .task(id: locationManager.location?.coordinate.latitude) {
+            guard let location = locationManager.location else { return }
+            await greetingProvider.fetchWeather(for: location)
+        }
+        .onReceive(Timer.publish(every: 30 * 60, on: .main, in: .common).autoconnect()) { _ in
             if let location = locationManager.location {
-                await greetingProvider.fetchWeather(for: location)
+                Task { await greetingProvider.fetchWeather(for: location) }
             }
         }
     }
