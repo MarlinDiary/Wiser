@@ -30,6 +30,18 @@ struct ContentView: View {
         Color(.secondarySystemBackground)
     }
 
+    private var focusDisplay: String {
+        let totalSeconds = Int(focusTimer.elapsedSeconds)
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = totalSeconds % 60
+        if hours > 0 {
+            return String(format: "%02d:%02d", hours, minutes)
+        } else {
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
+    }
+
     private func formattedDuration(totalMinutes: Int) -> String {
         let hours = totalMinutes / 60
         let minutes = totalMinutes % 60
@@ -93,10 +105,12 @@ struct ContentView: View {
                     .scaleEffect(0.66)
                     .frame(height: 364 * 0.66)
                     .padding(.bottom, 16)
-                Text(formattedDuration(totalMinutes: focusTimer.totalMinutes))
-                    .font(.system(size: 40, weight: .medium, design: .rounded))
+                Text(focusDisplay)
+                    .font(.system(size: 48, weight: .medium, design: .rounded))
                     .monospacedDigit()
                     .foregroundStyle(.primary)
+                    .contentTransition(.numericText())
+                    .animation(.linear(duration: 0.3), value: focusDisplay)
                 Spacer()
                 ZStack {
                     Button(action: {
