@@ -81,7 +81,7 @@ final class GreetingProvider {
         switch greeting {
         case "Good morning": return Color(red: 0xF1/255.0, green: 0x90/255.0, blue: 0x72/255.0)   // 曙色
         case "Good afternoon": return Color(red: 0xE6/255.0, green: 0xB4/255.0, blue: 0x22/255.0)  // 山吹色
-        case "Good evening": return Color(red: 0xB7/255.0, green: 0x28/255.0, blue: 0x2E/255.0)    // 茜色
+        case "Good evening": return Color(red: 0x86/255.0, green: 0x7B/255.0, blue: 0xA9/255.0)    // 紫苑色
         case "Good night": return Color(red: 0x22/255.0, green: 0x3A/255.0, blue: 0x70/255.0)      // 紺色
         default: return .secondary
         }
@@ -91,7 +91,7 @@ final class GreetingProvider {
         switch greeting {
         case "Good morning": return Color(red: 0xF7/255.0, green: 0xB2/255.0, blue: 0x9B/255.0)   // 淡曙色
         case "Good afternoon": return Color(red: 0xF5/255.0, green: 0xD0/255.0, blue: 0x62/255.0)  // 淡山吹色
-        case "Good evening": return Color(red: 0xE0/255.0, green: 0x6B/255.0, blue: 0x72/255.0)    // 淡茜色
+        case "Good evening": return Color(red: 0xB0/255.0, green: 0xA7/255.0, blue: 0xCC/255.0)    // 淡紫苑色
         case "Good night": return Color(red: 0x6B/255.0, green: 0x8E/255.0, blue: 0xC2/255.0)      // 淡紺色
         default: return .secondary
         }
