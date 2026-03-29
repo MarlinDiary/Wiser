@@ -319,6 +319,8 @@ struct StatsView: View {
 }
 
 #Preview {
-    StatsView()
-        .modelContainer(for: FocusSession.self, inMemory: true)
+    let container = try! ModelContainer(for: FocusSession.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+    SampleData.insert(into: container.mainContext)
+    return StatsView()
+        .modelContainer(container)
 }

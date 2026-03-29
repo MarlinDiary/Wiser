@@ -121,7 +121,7 @@ struct ContentView: View {
                 ZStack {
                     Button(action: {
                         if focusTimer.isRunning {
-                            if let result = focusTimer.stop() {
+                            if let result = focusTimer.stop(), result.duration >= 300 {
                                 let session = FocusSession(startDate: result.startDate, durationSeconds: result.duration)
                                 modelContext.insert(session)
                             }
@@ -182,9 +182,6 @@ struct ContentView: View {
         }
         .onAppear {
             locationManager.requestLocation()
-            #if DEBUG
-            SampleData.insert(into: modelContext)
-            #endif
         }
         .task(id: locationManager.location?.coordinate.latitude) {
             guard let location = locationManager.location else { return }
@@ -205,6 +202,8 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
-        .modelContainer(for: FocusSession.self, inMemory: true)
+    let container = try! ModelContainer(for: FocusSession.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+    SampleData.insert(into: container.mainContext)
+    return ContentView()
+        .modelContainer(container)
 }
