@@ -15,7 +15,7 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var allSessions: [FocusSession]
     @State private var locationManager = LocationManager()
-    @State private var greetingProvider = GreetingProvider()
+    @State var greetingProvider = GreetingProvider()
     @State private var focusTimer = FocusTimer()
     @State private var isMusicOn = false
     @State private var isBrightScreen = false
@@ -100,10 +100,10 @@ struct ContentView: View {
                     .padding(.trailing, 16)
                 }
                 Spacer()
-                Label("Today \(formattedDuration(totalMinutes: todayMinutes))", systemImage: greetingProvider.displaySymbol)
+                Label(greetingProvider.greeting, systemImage: greetingProvider.displaySymbol)
                     .contentTransition(.symbolEffect(.replace))
                     .font(.system(.subheadline, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(greetingProvider.greetingColor)
                     .padding(.bottom, 16)
                     .opacity(focusTimer.isRunning ? 0 : 1)
                     .animation(.easeInOut(duration: 0.3), value: focusTimer.isRunning)
@@ -122,8 +122,9 @@ struct ContentView: View {
                     Button(action: {
                         if focusTimer.isRunning {
                             if let result = focusTimer.stop(), result.duration >= 300 {
-                                let session = FocusSession(startDate: result.startDate, durationSeconds: result.duration)
-                                modelContext.insert(session)
+                                for session in FocusSession.splitByDay(startDate: result.startDate, durationSeconds: result.duration) {
+                                    modelContext.insert(session)
+                                }
                             }
                             isMusicOn = false
                             isBrightScreen = false
@@ -201,9 +202,27 @@ struct ContentView: View {
     }
 }
 
-#Preview {
+#Preview("Morning") {
     let container = try! ModelContainer(for: FocusSession.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
     SampleData.insert(into: container.mainContext)
-    return ContentView()
+    return ContentView(greetingProvider: GreetingProvider(preview: "Good morning", symbol: "sun.max"))
+        .modelContainer(container)
+}
+
+#Preview("Afternoon") {
+    let container = try! ModelContainer(for: FocusSession.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+    return ContentView(greetingProvider: GreetingProvider(preview: "Good afternoon", symbol: "cloud.sun.fill"))
+        .modelContainer(container)
+}
+
+#Preview("Evening") {
+    let container = try! ModelContainer(for: FocusSession.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+    return ContentView(greetingProvider: GreetingProvider(preview: "Good evening", symbol: "sun.horizon.fill"))
+        .modelContainer(container)
+}
+
+#Preview("Night") {
+    let container = try! ModelContainer(for: FocusSession.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+    return ContentView(greetingProvider: GreetingProvider(preview: "Good night", symbol: "moon.stars"))
         .modelContainer(container)
 }

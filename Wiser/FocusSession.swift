@@ -21,4 +21,21 @@ final class FocusSession {
         self.startDate = startDate
         self.durationSeconds = durationSeconds
     }
+
+    static func splitByDay(startDate: Date, durationSeconds: TimeInterval) -> [FocusSession] {
+        let calendar = Calendar.current
+        let endDate = startDate.addingTimeInterval(durationSeconds)
+        var sessions: [FocusSession] = []
+        var current = startDate
+
+        while current < endDate {
+            let nextMidnight = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: current)!)
+            let segmentEnd = min(nextMidnight, endDate)
+            let segmentDuration = segmentEnd.timeIntervalSince(current)
+            sessions.append(FocusSession(startDate: current, durationSeconds: segmentDuration))
+            current = segmentEnd
+        }
+
+        return sessions
+    }
 }
