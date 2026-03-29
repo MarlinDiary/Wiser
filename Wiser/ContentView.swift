@@ -19,6 +19,8 @@ struct ContentView: View {
     @State private var focusTimer = FocusTimer()
     @State private var isMusicOn = false
     @State private var isBrightScreen = false
+    @State private var showStats = false
+    @State private var showHistory = false
 
     private var todayMinutes: Int {
         let startOfDay = Calendar.current.startOfDay(for: Date())
@@ -83,9 +85,11 @@ struct ContentView: View {
                     Button(action: {
                         if focusTimer.isRunning {
                             isMusicOn.toggle()
+                        } else {
+                            showHistory = true
                         }
                     }) {
-                        Image(systemName: focusTimer.isRunning ? (isMusicOn ? "music.note" : "music.note.slash") : "plus")
+                        Image(systemName: focusTimer.isRunning ? (isMusicOn ? "music.note" : "music.note.slash") : "text.page")
                             .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
                             .font(.headline)
                             .frame(width: 20, height: 20)
@@ -140,7 +144,9 @@ struct ContentView: View {
 
                     HStack {
                         Button(action: {
-                            // TODO
+                            if !focusTimer.isRunning {
+                                showStats = true
+                            }
                         }) {
                             Image(systemName: focusTimer.isRunning ? "backward.end.fill" : "chart.bar.fill")
                                 .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
@@ -176,6 +182,9 @@ struct ContentView: View {
         }
         .onAppear {
             locationManager.requestLocation()
+            #if DEBUG
+            SampleData.insert(into: modelContext)
+            #endif
         }
         .task(id: locationManager.location?.coordinate.latitude) {
             guard let location = locationManager.location else { return }
@@ -185,6 +194,12 @@ struct ContentView: View {
             if let location = locationManager.location {
                 Task { await greetingProvider.fetchWeather(for: location) }
             }
+        }
+        .sheet(isPresented: $showStats) {
+            StatsView()
+        }
+        .sheet(isPresented: $showHistory) {
+            HistoryView()
         }
     }
 }
