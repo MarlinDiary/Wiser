@@ -55,6 +55,7 @@ struct HistoryView: View {
                 }
             }
             .listStyle(.insetGrouped)
+            .scrollIndicators(.hidden)
             .navigationTitle("History")
             .navigationBarTitleDisplayMode(.inline)
         }
