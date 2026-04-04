@@ -85,7 +85,16 @@ final class FocusTimer {
         save()
     }
 
+    func refreshOnForeground() {
+        guard isRunning, !isPaused, let startDate else { return }
+        elapsedSeconds = accumulatedBeforePause + Date().timeIntervalSince(startDate)
+        if timer == nil {
+            startTimer()
+        }
+    }
+
     private func startTimer() {
+        timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self else { return }
             self.tick()

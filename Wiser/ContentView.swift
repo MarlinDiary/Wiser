@@ -13,6 +13,7 @@ import Combine
 struct ContentView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
     @Query private var allSessions: [FocusSession]
     @State private var locationManager = LocationManager()
     @State var greetingProvider = GreetingProvider()
@@ -183,6 +184,11 @@ struct ContentView: View {
         }
         .onAppear {
             locationManager.requestLocation()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                focusTimer.refreshOnForeground()
+            }
         }
         .task(id: locationManager.location?.coordinate.latitude) {
             guard let location = locationManager.location else { return }
