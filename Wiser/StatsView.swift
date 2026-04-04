@@ -16,10 +16,17 @@ enum StatsPeriod: String, CaseIterable {
 }
 
 struct ChartEntry: Identifiable {
-    let id = UUID()
+    let id: String
     let label: String
     let minutes: Int
     let isCurrent: Bool
+
+    init(label: String, minutes: Int, isCurrent: Bool) {
+        self.id = label
+        self.label = label
+        self.minutes = minutes
+        self.isCurrent = isCurrent
+    }
 }
 
 struct FocusChartView: View {
@@ -60,6 +67,7 @@ struct FocusChartView: View {
                         .fill(Color.accentColor.opacity(entry.isCurrent ? 0.8 : 0.3))
                         .frame(width: barWidth, height: barHeight)
                         .position(x: x, y: y + barHeight / 2)
+                        .animation(.easeInOut(duration: 0.35), value: barHeight)
                 }
 
                 ForEach(Array(data.enumerated()), id: \.element.id) { index, entry in
@@ -185,9 +193,13 @@ struct StatsView: View {
     }
 
     private func sessionsMinutes(from start: Date, to end: Date) -> Int {
-        allSessions
-            .filter { $0.startDate >= start && $0.startDate < end }
-            .reduce(0) { $0 + $1.durationMinutes }
+        allSessions.reduce(0) { total, session in
+            let sessionEnd = session.startDate.addingTimeInterval(session.durationSeconds)
+            let overlapStart = max(session.startDate, start)
+            let overlapEnd = min(sessionEnd, end)
+            guard overlapStart < overlapEnd else { return total }
+            return total + Int(overlapEnd.timeIntervalSince(overlapStart)) / 60
+        }
     }
 
     private var barWidth: CGFloat {
@@ -234,6 +246,8 @@ struct StatsView: View {
                     .font(.system(size: 32, weight: .semibold, design: .rounded))
                     .foregroundStyle(.primary)
                     .frame(maxWidth: .infinity, alignment: .center)
+                    .contentTransition(.numericText())
+                    .animation(.easeInOut(duration: 0.35), value: formattedTotal)
 
                 FocusChartView(
                     data: chartData,
@@ -265,21 +279,28 @@ struct StatsView: View {
                     }
                 }
                 ToolbarItem(placement: .principal) {
-                    HStack(spacing: 16) {
-                        Button(action: { offset -= 1 }) {
+                    HStack(spacing: 8) {
+                        Button(action: {
+                            withAnimation(.easeInOut(duration: 0.35)) { offset -= 1 }
+                        }) {
                             Image(systemName: "chevron.left")
-                                .font(.caption)
+                                .font(.system(size: 11, weight: .semibold))
                         }
                         Text(periodTitle)
                             .font(.system(.subheadline, design: .rounded))
                             .fontWeight(.medium)
+                            .frame(minWidth: 100)
+                            .contentTransition(.numericText())
+                            .animation(.easeInOut(duration: 0.35), value: periodTitle)
                         Button(action: {
-                            if offset < 0 { offset += 1 }
+                            if offset < 0 {
+                                withAnimation(.easeInOut(duration: 0.35)) { offset += 1 }
+                            }
                         }) {
                             Image(systemName: "chevron.right")
-                                .font(.caption)
+                                .font(.system(size: 11, weight: .semibold))
                         }
-                        .disabled(offset >= 0)
+                        .opacity(offset >= 0 ? 0.3 : 1)
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
